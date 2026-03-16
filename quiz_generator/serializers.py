@@ -13,7 +13,7 @@ class GenerateQuizRequestSerializer(serializers.Serializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id', 'text', 'difficulty']
+        fields = ['id', 'text', 'difficulty', 'explanation']
 
 class SubmitAnswerRequestSerializer(serializers.Serializer):
     question_id = serializers.UUIDField()

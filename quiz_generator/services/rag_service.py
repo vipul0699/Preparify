@@ -1,7 +1,8 @@
 import os
+from django.conf import settings
 import chromadb
 from chromadb.utils import embedding_functions
-from langchain_openai import OpenAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -10,8 +11,8 @@ CHROMA_DB_PATH = os.path.join(os.getcwd(), "chroma_db")
 
 class RAGService:
     def __init__(self):
-        self.embedding_fn = OpenAIEmbeddings(
-            api_key=os.getenv("OPENAI_API_KEY")
+        self.embedding_fn = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
         )
         # We can use LangChain's Chroma wrapper or native Chroma
         # Using native for simpler control over collections, or LangChain wrapper for ease.

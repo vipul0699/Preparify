@@ -1,6 +1,6 @@
 import json
-import os
-from langchain_openai import ChatOpenAI
+from django.conf import settings
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
@@ -11,6 +11,7 @@ class QuestionOutput(BaseModel):
     text: str = Field(description="The question text")
     difficulty: str = Field(description="The difficulty level: Easy, Medium, or Hard")
     correct_answer: str = Field(description="The correct answer to the question")
+    explanation: str = Field(description="A brief explanation of why this answer is correct")
 
 class QuestionList(BaseModel):
     questions: List[QuestionOutput]
@@ -22,9 +23,9 @@ class EvaluationOutput(BaseModel):
 
 class LLMService:
     def __init__(self):
-        self.llm = ChatOpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            model="gpt-3.5-turbo", # or gpt-4 if available
+        self.llm = ChatGroq(
+            api_key=settings.GROQ_API_KEY,
+            model="llama-3.3-70b-versatile",
             temperature=0.7
         )
         
@@ -36,6 +37,8 @@ class LLMService:
         
         prompt_text = """
         You are a quiz master. Generate 3 {difficulty} questions about the topic: {topic}.
+        
+        For each question, provide a clear and concise explanation of why the correct answer is right.
         
         Use the following context if relevant:
         {context}
