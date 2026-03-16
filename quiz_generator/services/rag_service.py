@@ -1,10 +1,18 @@
 import os
 from django.conf import settings
-import chromadb
-from chromadb.utils import embedding_functions
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_chroma import Chroma
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+# Graceful degradation for Vercel deployment where heavy ML libraries are not supported
+try:
+    import chromadb
+    from chromadb.utils import embedding_functions
+    from langchain_huggingface import HuggingFaceEmbeddings
+    from langchain_chroma import Chroma
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    ML_LIBS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Semantic search libraries not available: {e}. Starting in dummy RAG mode.")
+    ML_LIBS_AVAILABLE = False
+
 
 # Initialize ChromaDB client persistent
 CHROMA_DB_PATH = os.path.join(os.getcwd(), "chroma_db")
@@ -57,5 +65,19 @@ class RAGService:
         context = "\n\n".join([doc.page_content for doc in results])
         return context
 
+
+class DummyRAGService:
+    """Fallback service when heavy ML libraries are not available (e.g., on Vercel)"""
+    def __init__(self):
+        print("Initialized DummyRAGService")
+    
+    def ingest_material(self, topic: str, content: str):
+        print(f"[DummyRAGService] Ignored ingestion for topic '{topic}' (length {len(content)}) - ML libraries missing.")
+
+    def get_context(self, topic: str, k: int = 3) -> str:
+        print(f"[DummyRAGService] Providing empty context for '{topic}' - ML libraries missing.")
+        return ""
+
+
 # Singleton instance
-rag_service = RAGService()
+rag_service = RAGService() if ML_LIBS_AVAILABLE else DummyRAGService()

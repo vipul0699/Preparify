@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Quiz Results - Preparify</title>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 lg:px-40 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Preparify</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-bold" href="#">Quizzes</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Resources</a>
+</nav>
+<button class="flex items-center justify-center rounded-lg h-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-3 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+<div class="bg-primary/10 border border-primary/20 bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile avatar showing a smiling person" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBS7uW-aEjJ2Ux2HXO5pEuOqikfgl1qOuatIED-0GIKBRZQaUmQJ_KdG9lM1BQNmryty_VXMGIjhHt5wpNU_XHiD1e3AKoQBH7TvU0Mre_z7YhEi5TnqH108cIxholivOQeNFOnG_wpk1WQcp5GjYJz7L5Rtkd8skn7EiuyMNfLz8UWfrUNDik1po7rKvw-soTjZdsoyWUysaBHNVaTqz5CI_QeNtoi2u7U6I8j43C0WK9qHCeMwljSgnKZn4gmy-O7EZz6aZpodFNG");'></div>
+</div>
+</header>
+<main class="flex-1 flex justify-center py-8 px-6 lg:px-40">
+<div class="max-w-[960px] flex-1 flex flex-col gap-8">
+<!-- Hero Summary Section -->
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 p-8 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex flex-col gap-2">
+<nav class="flex items-center gap-2 text-primary text-sm font-semibold mb-1">
+<span class="material-symbols-outlined text-[16px]">school</span>
+<span>Quiz Completed</span>
+</nav>
+<h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Python Basics</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg">Detailed performance analysis and AI-driven insights.</p>
+</div>
+<div class="flex flex-wrap gap-4 w-full lg:w-auto">
+<div class="flex-1 lg:min-w-[160px] flex flex-col gap-1 rounded-xl p-5 bg-primary/5 border border-primary/10">
+<p class="text-primary text-xs font-bold uppercase tracking-wider">Total Score</p>
+<p class="text-slate-900 dark:text-white tracking-light text-3xl font-black">78<span class="text-slate-400 text-xl font-normal">/100</span></p>
+</div>
+<div class="flex-1 lg:min-w-[160px] flex flex-col gap-1 rounded-xl p-5 bg-green-500/5 border border-green-500/10">
+<p class="text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-wider">Accuracy</p>
+<p class="text-slate-900 dark:text-white tracking-light text-3xl font-black">2<span class="text-slate-400 text-xl font-normal">/3 Correct</span></p>
+</div>
+</div>
+</div>
+<!-- Actions Section -->
+<div class="flex flex-wrap gap-3">
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-lg transition-all">
+<span class="material-symbols-outlined">restart_alt</span>
+                            Take Another Quiz
+                        </button>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 px-6 rounded-lg transition-all">
+<span class="material-symbols-outlined">dashboard</span>
+                            Back to Dashboard
+                        </button>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 px-6 rounded-lg transition-all">
+<span class="material-symbols-outlined">share</span>
+                            Share Result
+                        </button>
+</div>
+<!-- Detailed Breakdown -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3">
+<h2 class="text-slate-900 dark:text-white text-2xl font-bold leading-tight tracking-[-0.015em]">Detailed Breakdown</h2>
+<div class="h-[1px] flex-1 bg-slate-200 dark:bg-slate-800"></div>
+</div>
+<div class="space-y-6">
+<!-- Question 1: Correct -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start gap-4 mb-4">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Question 1</span>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">What is the correct way to create a list in Python?</h3>
+</div>
+<span class="flex items-center justify-center size-10 rounded-full bg-green-500/10 text-green-600">
+<span class="material-symbols-outlined font-bold">check</span>
+</span>
+</div>
+<div class="mb-6">
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Your Answer:</p>
+<div class="p-3 bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 rounded-lg text-green-700 dark:text-green-400 font-medium">
+                                        my_list = [1, 2, 3]
+                                    </div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-lg border-l-4 border-primary">
+<div class="flex items-center gap-2 mb-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+<span class="text-sm font-bold uppercase tracking-wider">AI Feedback</span>
+</div>
+<p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                                        Spot on! In Python, lists are defined using square brackets <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">[]</code>. You correctly identified the syntax for list initialization. Remember that lists are ordered, changeable, and allow duplicate values.
+                                    </p>
+</div>
+</div>
+<!-- Question 2: Incorrect -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start gap-4 mb-4">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Question 2</span>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">How do you define a function in Python?</h3>
+</div>
+<span class="flex items-center justify-center size-10 rounded-full bg-red-500/10 text-red-600">
+<span class="material-symbols-outlined font-bold">close</span>
+</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+<div>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Your Answer:</p>
+<div class="p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-lg text-red-700 dark:text-red-400 font-medium">
+                                            function myFunc():
+                                        </div>
+</div>
+<div>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Correct Answer:</p>
+<div class="p-3 bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 rounded-lg text-green-700 dark:text-green-400 font-medium">
+                                            def myFunc():
+                                        </div>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-lg border-l-4 border-primary">
+<div class="flex items-center gap-2 mb-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+<span class="text-sm font-bold uppercase tracking-wider">AI Feedback</span>
+</div>
+<p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                                        It looks like you're mixing up Python with JavaScript or other languages. In Python, we use the <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">def</code> keyword (short for define) to start a function block, followed by the function name and parentheses.
+                                    </p>
+</div>
+</div>
+<!-- Question 3: Correct -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start gap-4 mb-4">
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Question 3</span>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Which of these is used for a single-line comment?</h3>
+</div>
+<span class="flex items-center justify-center size-10 rounded-full bg-green-500/10 text-green-600">
+<span class="material-symbols-outlined font-bold">check</span>
+</span>
+</div>
+<div class="mb-6">
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Your Answer:</p>
+<div class="p-3 bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 rounded-lg text-green-700 dark:text-green-400 font-medium">
+                                        # This is a comment
+                                    </div>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-lg border-l-4 border-primary">
+<div class="flex items-center gap-2 mb-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+<span class="text-sm font-bold uppercase tracking-wider">AI Feedback</span>
+</div>
+<p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                                        Perfect! The hash character <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">#</code> is the standard way to write single-line comments in Python. Python ignores everything after the hash on that line.
+                                    </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="mt-8 mb-12 flex flex-col items-center gap-4 text-slate-400 dark:text-slate-500">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<p class="text-xs uppercase tracking-widest font-bold">Results recorded on Oct 24, 2023</p>
+</div>
+</footer>
+</div>
+</main>
+</div>
+</div>
+</body></html>

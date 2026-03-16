@@ -3,12 +3,11 @@ djangorestframework
 langchain
 langchain-core
 langchain-community
-langchain-groq
-langchain-huggingface
-#sentence-transformers
-langchain-chroma
+# langchain-huggingface
+# sentence-transformers
+# langchain-chroma
 langchain-text-splitters
-chromadb
+# chromadb
 python-dotenv
 django-allauth
 djangorestframework-simplejwt

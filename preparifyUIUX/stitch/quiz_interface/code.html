@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 lg:px-40">
+<div class="flex items-center gap-3">
+<div class="flex h-8 w-8 items-center justify-center rounded bg-primary text-white">
+<span class="material-symbols-outlined text-xl">terminal</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">Preparify</h2>
+</div>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">close</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col items-center">
+<div class="w-full max-w-3xl px-6 py-8 flex flex-col gap-8">
+<div class="flex flex-col gap-4">
+<div class="flex items-end justify-between">
+<div>
+<h3 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Progress</h3>
+<p class="text-lg font-bold">Question 1 of 3</p>
+</div>
+<p class="text-sm font-medium text-primary">33% Completed</p>
+</div>
+<div class="h-3 w-full rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 33.33%;"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-1.5">
+<span class="material-symbols-outlined text-primary text-lg">code</span>
+<span class="text-sm font-semibold text-primary">Python Basics</span>
+</div>
+<div class="flex items-center gap-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5">
+<span class="material-symbols-outlined text-amber-500 text-lg">signal_cellular_alt</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Medium Difficulty</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+<h1 class="text-2xl md:text-3xl font-bold leading-tight mb-8">
+                            What year was Python first released?
+                        </h1>
+<div class="space-y-4">
+<label class="block text-sm font-medium text-slate-500 dark:text-slate-400" for="answer">
+                                Your Written Answer
+                            </label>
+<textarea class="block w-full rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary transition-all p-4 text-lg" id="answer" name="answer" placeholder="Type your answer here..." rows="6"></textarea>
+<p class="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">info</span>
+                                Answer will be analyzed for accuracy and technical terminology.
+                            </p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">skip_next</span>
+                            Skip Question
+                        </button>
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 px-10 py-3 rounded-xl bg-primary text-white font-bold hover:opacity-90 transition-opacity shadow-lg shadow-primary/20">
+                            Submit Answer
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<footer class="px-6 py-8 lg:px-40 text-center">
+<p class="text-xs text-slate-400 dark:text-slate-600">
+                    © 2024 Preparify Learning Systems. Focused Mode Active.
+                </p>
+</footer>
+</div>
+</div>
+</body></html>
