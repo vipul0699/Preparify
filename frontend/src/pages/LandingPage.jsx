@@ -1,13 +1,34 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AnimatedBackground from '../components/AnimatedBackground';
 
 export default function LandingPage() {
   const { user } = useAuth();
+  const [personalizedTopics, setPersonalizedTopics] = useState([]);
+
+  useEffect(() => {
+    async function fetchPersonalizedTopics() {
+      if (user) {
+        try {
+          const response = await fetch('/api/quiz/personalized-topics/');
+          if (response.ok) {
+            const data = await response.json();
+            if (data.topics && data.topics.length > 0) {
+              setPersonalizedTopics(data.topics);
+            }
+          }
+        } catch (error) {
+          console.error("Failed to fetch personalized topics:", error);
+        }
+      }
+    }
+    fetchPersonalizedTopics();
+  }, [user]);
 
   return (
     <div className="font-[Inter] text-slate-900 min-h-screen flex flex-col relative">
-      <AnimatedBackground />
+      <AnimatedBackground customLabels={personalizedTopics} />
       {/* Header */}
       <header className="flex items-center justify-between px-6 md:px-20 py-4 bg-white/40 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
         <div className="flex items-center gap-2 text-primary">
@@ -102,12 +123,13 @@ export default function LandingPage() {
             <div className="flex flex-col gap-2">
               <h3 className="text-slate-900 text-xl font-bold">Free</h3>
               <div className="flex items-baseline gap-1"><span className="text-slate-900 text-5xl font-black">$0</span><span className="text-slate-600 font-bold text-base">/mo</span></div>
-              <p className="text-slate-600 font-medium text-sm">Perfect for trying out Preparify.</p>
+              <p className="text-slate-600 font-medium text-sm">Explore the power of AI learning.</p>
             </div>
             <Link to="/signup" className="flex w-full items-center justify-center rounded-xl h-12 px-6 bg-slate-200/50 text-slate-900 border border-slate-300 text-sm font-bold hover:bg-white transition-colors shadow-sm">Get Started</Link>
             <ul className="flex flex-col gap-4 pt-4 border-t border-slate-300/50">
-              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> 5 Quizzes/mo</li>
-              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Basic Analytics</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">bolt</span> Core Intelligence Engine</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> 5 Quizzes / month</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Basic Feedback Logic</li>
             </ul>
           </div>
           {/* Pro */}
@@ -120,9 +142,10 @@ export default function LandingPage() {
             </div>
             <button className="flex w-full items-center justify-center rounded-xl h-12 px-6 bg-primary text-white text-sm font-bold shadow-[0_5px_15px_rgba(59,130,246,0.3)] hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(59,130,246,0.5)] transition-all">Go Pro</button>
             <ul className="flex flex-col gap-4 pt-4 border-t border-slate-200">
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">psychology</span> Advanced Reasoning Engine</li>
               <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Unlimited Quizzes</li>
-              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Advanced Insights</li>
-              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> PDF Exports</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Deep Conceptual Analysis</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> 50-Page PDF Processing</li>
             </ul>
           </div>
           {/* Institution */}
@@ -134,9 +157,10 @@ export default function LandingPage() {
             </div>
             <button className="flex w-full items-center justify-center rounded-xl h-12 px-6 bg-slate-200/50 text-slate-900 border border-slate-300 text-sm font-bold hover:bg-white transition-colors shadow-sm">Contact Sales</button>
             <ul className="flex flex-col gap-4 pt-4 border-t border-slate-300/50">
-              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> LMS Integration</li>
-              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Admin Dashboard</li>
-              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Priority Support</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">rocket_launch</span> Expert Multimodal Engine</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Full Textbook Ingestion</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Deep Conceptual Analysis</li>
+              <li className="flex items-center gap-3 text-sm text-slate-700 font-medium"><span className="material-symbols-outlined text-primary text-xl drop-shadow-sm">check_circle</span> Team Admin Dashboard</li>
             </ul>
           </div>
         </div>
@@ -152,7 +176,7 @@ export default function LandingPage() {
             <h2 className="text-slate-900 text-lg font-bold drop-shadow-sm">Preparify</h2>
           </div>
           <div className="flex gap-8 text-sm text-slate-700 font-medium"><a className="hover:text-primary drop-shadow-sm" href="#">Privacy Policy</a><a className="hover:text-primary drop-shadow-sm" href="#">Terms of Service</a><a className="hover:text-primary drop-shadow-sm" href="#">Contact</a></div>
-          <p className="text-sm font-medium text-slate-600 drop-shadow-sm">© 2024 Preparify AI. All rights reserved.</p>
+          <p className="text-sm font-medium text-slate-600 drop-shadow-sm">© 2026 Preparify AI. All rights reserved.</p>
         </div>
       </footer>
     </div>

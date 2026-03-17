@@ -6,6 +6,9 @@ import Dashboard from './pages/Dashboard.jsx';
 import QuizInterface from './pages/QuizInterface.jsx';
 import QuizResults from './pages/QuizResults.jsx';
 import ScoreHistory from './pages/ScoreHistory.jsx';
+import ExamDashboard from './pages/ExamDashboard.jsx';
+import ExamSimulator from './pages/ExamSimulator.jsx';
+import ExamReport from './pages/ExamReport.jsx';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -23,6 +26,9 @@ export default function App() {
       <Route path="/quiz" element={<ProtectedRoute><QuizInterface /></ProtectedRoute>} />
       <Route path="/results" element={<ProtectedRoute><QuizResults /></ProtectedRoute>} />
       <Route path="/scores" element={<ProtectedRoute><ScoreHistory /></ProtectedRoute>} />
+      <Route path="/exams" element={<ProtectedRoute><ExamDashboard /></ProtectedRoute>} />
+      <Route path="/exam-simulator/:attemptId" element={<ProtectedRoute><ExamSimulator /></ProtectedRoute>} />
+      <Route path="/exam-report" element={<ProtectedRoute><ExamReport /></ProtectedRoute>} />
     </Routes>
   );
 }

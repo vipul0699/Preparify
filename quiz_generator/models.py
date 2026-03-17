@@ -18,6 +18,8 @@ class QuizSession(models.Model):
         on_delete=models.CASCADE, related_name='quiz_sessions'
     )
     topic = models.CharField(max_length=255)
+    gap_analysis = models.TextField(null=True, blank=True, help_text="AI Gap Analysis for Pro users")
+    study_focus = models.JSONField(null=True, blank=True, help_text="AI-suggested study focus areas")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

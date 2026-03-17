@@ -209,6 +209,28 @@ export default function Dashboard() {
                 </div>
               </section>
 
+              {/* Exam Simulations Entry */}
+              <section className="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-2xl text-white shadow-xl relative overflow-hidden group border border-slate-700">
+                <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                  <div className="max-w-md">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="bg-primary px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest text-white">New Feature</span>
+                      <span className="material-symbols-outlined text-amber-400">timer</span>
+                    </div>
+                    <h3 className="text-3xl font-black tracking-tight mb-2">Exam Simulations</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">
+                      Attempt full-length CAT past papers and AI-certified mocks under strict official timing and scoring rules.
+                    </p>
+                  </div>
+                  <Link to="/exams" className="bg-white text-slate-900 font-black py-4 px-10 rounded-xl hover:bg-slate-100 transition-all flex items-center gap-2 shadow-lg shadow-white/5 whitespace-nowrap">
+                    Enter Exam Hub <span className="material-symbols-outlined">arrow_forward</span>
+                  </Link>
+                </div>
+                {/* Decorative elements */}
+                <div className="absolute -top-12 -right-12 size-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all" />
+                <span className="material-symbols-outlined absolute -bottom-10 -right-4 text-[180px] text-white/5 group-hover:rotate-12 transition-transform duration-700 pointer-events-none">history_edu</span>
+              </section>
+
               {/* Recent Activity */}
               <section>
                 <div className="flex items-center justify-between mb-4 px-2">

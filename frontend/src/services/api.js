@@ -73,4 +73,19 @@ export const quizApi = {
     const body = content instanceof FormData ? content : JSON.stringify({ topic, content });
     return request('/quiz/ingest/', { method: 'POST', body });
   },
+  getGapAnalysis: (quizId) => request(`/quiz/sessions/${quizId}/gap-analysis/`),
+  downloadReport: (quizId) => {
+    const token = localStorage.getItem('access_token');
+    return fetch(`${API_BASE}/quiz/sessions/${quizId}/download-report/`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  },
+};
+
+// Exams
+export const examsApi = {
+  list: () => request('/exams/'),
+  start: (examId) => request(`/exams/${examId}/start/`, { method: 'POST' }),
+  submit: (attemptId, data) => request(`/exams/attempts/${attemptId}/submit/`, { method: 'POST', body: JSON.stringify(data) }),
+  generateMock: (examType = 'CAT') => request('/exams/generate-mock/', { method: 'POST', body: JSON.stringify({ exam_type: examType }) }),
 };

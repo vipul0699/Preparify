@@ -5,12 +5,20 @@ from .serializers import (
     TopicMaterialSerializer, GenerateQuizRequestSerializer, 
     QuestionSerializer, SubmitAnswerRequestSerializer, EvaluationResponseSerializer
 )
-from .models import QuizSession, Question, UserResponse
+from .models import QuizSession, Question, UserResponse, TopicMaterial
 from .services.rag_service import rag_service
 from .services.llm_service import llm_service
 import uuid
+import json
+import io
 from django.utils import timezone
 from datetime import timedelta
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 
 class IngestMaterialView(views.APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -187,6 +195,7 @@ class SubmitAnswerView(views.APIView):
         ScoreRecord.objects.create(
             user=user,
             quiz_session=quiz_session,
+            topic=quiz_session.topic,
             total_questions=total_questions,
             correct_answers=correct_answers,
             score=score,
@@ -203,3 +212,115 @@ class SubmitAnswerView(views.APIView):
         
         user.last_quiz_at = today
         user.save()
+
+class PersonalizedTopicsView(views.APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return Response({"topics": []}, status=status.HTTP_200_OK)
+
+        # Get unique topics from user's last 5 quiz sessions
+        recent_topics = QuizSession.objects.filter(user=request.user).order_by('-created_at').values_list('topic', flat=True)[:5]
+        recent_topics = list(set(recent_topics)) # De-duplicate
+
+        if not recent_topics:
+            return Response({"topics": []}, status=status.HTTP_200_OK)
+
+        personalized_topics = llm_service.generate_personalized_topics(recent_topics)
+        
+        return Response({"topics": personalized_topics}, status=status.HTTP_200_OK)
+
+class GapAnalysisView(views.APIView):
+    def get(self, request, quiz_id):
+        if not request.user.is_authenticated:
+            return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if not request.user.is_paid:
+            return Response({"error": "Upgrade to Pro to access Gap Analysis reports."}, status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            quiz_session = QuizSession.objects.get(id=quiz_id, user=request.user)
+        except QuizSession.DoesNotExist:
+            return Response({"error": "Quiz session not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # If already generated, return it
+        if quiz_session.gap_analysis:
+            return Response({
+                "gap_analysis": quiz_session.gap_analysis,
+                "study_focus": quiz_session.study_focus
+            }, status=status.HTTP_200_OK)
+        
+        # Generate Performance Data for LLM
+        responses = UserResponse.objects.filter(question__quiz_session=quiz_session)
+        performance_data = []
+        for r in responses:
+            performance_data.append({
+                "question": r.question.text,
+                "user_answer": r.user_answer,
+                "correct_answer": r.question.generated_answer,
+                "is_correct": r.is_correct,
+                "score": r.score,
+                "feedback": r.feedback
+            })
+        
+        # Call LLM
+        analysis = llm_service.generate_gap_analysis(quiz_session.topic, performance_data)
+        
+        # Save to DB
+        quiz_session.gap_analysis = analysis.get('gap_analysis')
+        quiz_session.study_focus = analysis.get('study_focus')
+        quiz_session.save()
+        
+        return Response(analysis, status=status.HTTP_200_OK)
+
+class DownloadReportView(views.APIView):
+    def get(self, request, quiz_id):
+        if not request.user.is_authenticated or not request.user.is_paid:
+            return Response({"error": "Pro subscription required"}, status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            quiz_session = QuizSession.objects.get(id=quiz_id, user=request.user)
+        except QuizSession.DoesNotExist:
+            return Response({"error": "Quiz session not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if not quiz_session.gap_analysis:
+            return Response({"error": "Report not generated yet. Please view it first."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate PDF
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter)
+        styles = getSampleStyleSheet()
+        elements = []
+
+        # Title
+        elements.append(Paragraph(f"Preparify: Quiz Gap Analysis Report", styles['Title']))
+        elements.append(Spacer(1, 12))
+        
+        # Info
+        elements.append(Paragraph(f"<b>Topic:</b> {quiz_session.topic}", styles['Normal']))
+        elements.append(Paragraph(f"<b>Date:</b> {quiz_session.created_at.strftime('%Y-%m-%d')}", styles['Normal']))
+        elements.append(Spacer(1, 24))
+
+        # Gap Analysis Section
+        elements.append(Paragraph("Conceptual Breakdown", styles['Heading2']))
+        elements.append(Paragraph(quiz_session.gap_analysis, styles['Normal']))
+        elements.append(Spacer(1, 24))
+
+        # Study Focus Section
+        elements.append(Paragraph("Suggested Study Focus List", styles['Heading2']))
+        for item in quiz_session.study_focus:
+            elements.append(Paragraph(f"• {item}", styles['Normal']))
+        
+        elements.append(Spacer(1, 24))
+        
+        # Performance Summary
+        responses = UserResponse.objects.filter(question__quiz_session=quiz_session)
+        correct_count = responses.filter(is_correct=True).count()
+        total_count = responses.count()
+        elements.append(Paragraph(f"<b>Overall Score:</b> {correct_count}/{total_count} correct", styles['Normal']))
+
+        doc.build(elements)
+        buffer.seek(0)
+        
+        return FileResponse(buffer, as_attachment=True, filename=f"Preparify_Report_{quiz_id[:8]}.pdf")

@@ -94,9 +94,13 @@ const GraphNode = ({ position, label, isHighlight }) => {
 };
 
 // The rotating graph structure
-const NetworkGraph = ({ scrollRotationSpeed }) => {
+const NetworkGraph = ({ scrollRotationSpeed, customLabels }) => {
   const groupRef = useRef();
   const { nodes, edges } = useMemo(() => generateGraphData(), []);
+  
+  const currentLabels = useMemo(() => {
+    return (customLabels && customLabels.length > 0) ? customLabels : labels;
+  }, [customLabels]);
   
   // Assign labels to outer nodes
   let labelIdx = 0;
@@ -131,8 +135,8 @@ const NetworkGraph = ({ scrollRotationSpeed }) => {
         // Decide if this node gets a label
         let label = null;
         let isHighlight = false;
-        if (idx % 3 === 0 && labelIdx < labels.length && pos.distanceTo(new THREE.Vector3(0,0,0)) > 9) {
-           label = labels[labelIdx];
+        if (idx % 3 === 0 && labelIdx < currentLabels.length && pos.distanceTo(new THREE.Vector3(0,0,0)) > 9) {
+           label = currentLabels[labelIdx];
            isHighlight = true;
            labelIdx++;
         }
@@ -151,7 +155,7 @@ const NetworkGraph = ({ scrollRotationSpeed }) => {
 };
 
 // Scene Controller (handles mouse parallax and scroll tracking)
-const SceneController = () => {
+const SceneController = ({ customLabels }) => {
   const { camera, pointer } = useThree();
   const scrollRotationSpeed = useRef(0);
   const lastScrollY = useRef(window.scrollY);
@@ -194,19 +198,19 @@ const SceneController = () => {
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={1} color="#ffffff" />
       <pointLight position={[-10, -10, -10]} intensity={0.5} color="#3b82f6" />
-      <NetworkGraph scrollRotationSpeed={scrollRotationSpeed} />
+      <NetworkGraph scrollRotationSpeed={scrollRotationSpeed} customLabels={customLabels} />
     </>
   );
 };
 
 // Main Export Component
-export default function AnimatedBackground() {
+export default function AnimatedBackground({ customLabels }) {
   return (
     <div className="fixed inset-0 z-[-10] w-full h-full pointer-events-none bg-gradient-to-b from-[#f8fafc] to-[#f1f5f9]">
       <Canvas dpr={[1, 2]}>
         <color attach="background" args={['#f8fafc']} />
         <fog attach="fog" args={['#f8fafc', 20, 40]} />
-        <SceneController />
+        <SceneController customLabels={customLabels} />
       </Canvas>
     </div>
   );

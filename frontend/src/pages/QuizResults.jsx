@@ -1,10 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
+import { useAuth } from '../context/AuthContext';
+import { quizApi } from '../services/api';
 
 export default function QuizResults() {
   const location = useLocation();
   const { results = [], topic = 'Quiz', quizId } = location.state || {};
+  const { user } = useAuth();
+  
+  const [analysis, setAnalysis] = useState(null);
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     if (results.length > 0) {
@@ -30,6 +37,39 @@ export default function QuizResults() {
       }
     }
   }, [results]);
+
+  const handleGenerateAnalysis = async () => {
+    if (!quizId) return;
+    setLoadingAnalysis(true);
+    try {
+      const data = await quizApi.getGapAnalysis(quizId);
+      setAnalysis(data);
+    } catch (err) {
+      console.error("Failed to generate analysis:", err);
+    } finally {
+      setLoadingAnalysis(false);
+    }
+  };
+
+  const handleDownloadReport = async () => {
+    if (!quizId) return;
+    setDownloading(true);
+    try {
+      const res = await quizApi.downloadReport(quizId);
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Preparify_Report_${quizId.slice(0, 8)}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (err) {
+      console.error("Failed to download report:", err);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   if (!results.length) {
     return (
@@ -85,6 +125,85 @@ export default function QuizResults() {
               </div>
             </div>
           </div>
+
+          {/* Gap Analysis Section for Pro Users */}
+          {user?.is_paid && (
+            <div className="bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-8 text-white shadow-xl">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="bg-white/20 px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest">Pro Feature</span>
+                    <span className="material-symbols-outlined text-yellow-300">auto_awesome</span>
+                  </div>
+                  <h2 className="text-2xl font-black tracking-tight">AI Gap Analysis</h2>
+                  <p className="text-primary-foreground/80 text-sm max-w-md mt-1">
+                    Get a deep conceptual breakdown of your performance and a structured study focus list.
+                  </p>
+                </div>
+                {!analysis ? (
+                  <button 
+                    onClick={handleGenerateAnalysis}
+                    disabled={loadingAnalysis}
+                    className="bg-white text-primary font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-slate-50 transition-all flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {loadingAnalysis ? (
+                      <><span className="animate-spin material-symbols-outlined">sync</span> Generating...</>
+                    ) : (
+                      <><span className="material-symbols-outlined">analytics</span> Generate Report</>
+                    )}
+                  </button>
+                ) : (
+                  <button 
+                    onClick={handleDownloadReport}
+                    disabled={downloading}
+                    className="bg-white/20 hover:bg-white/30 text-white border border-white/30 font-bold py-3 px-8 rounded-xl transition-all flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {downloading ? (
+                      <><span className="animate-spin material-symbols-outlined">sync</span> Preparing...</>
+                    ) : (
+                      <><span className="material-symbols-outlined">download</span> Download PDF</>
+                    )}
+                  </button>
+                )}
+              </div>
+
+              {analysis && (
+                <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  <div className="bg-white/10 rounded-xl p-6 border border-white/20">
+                    <h3 className="text-sm font-black uppercase tracking-widest mb-4 flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[20px]">psychology</span> Conceptual Breakdown
+                    </h3>
+                    <p className="text-sm leading-relaxed text-white/90 whitespace-pre-wrap">{analysis.gap_analysis}</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-6 border border-white/20">
+                    <h3 className="text-sm font-black uppercase tracking-widest mb-4 flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[20px]">assignment</span> Study Focus List
+                    </h3>
+                    <ul className="space-y-3">
+                      {analysis.study_focus.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-3 text-sm text-white/90">
+                          <span className="mt-1 size-1.5 rounded-full bg-yellow-300 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Non-Pro User Teaser */}
+          {!user?.is_paid && (
+            <div className="bg-slate-100 rounded-2xl p-8 border-2 border-dashed border-slate-300 flex flex-col items-center text-center gap-4">
+              <span className="material-symbols-outlined text-4xl text-slate-400">lock</span>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">Unlock Deep Insights</h3>
+                <p className="text-slate-500 text-sm max-w-sm mt-1">Upgrade to Pro to get AI-powered Gap Analysis reports and personalized study plans after every quiz.</p>
+              </div>
+              <button className="bg-slate-900 text-white font-bold py-3 px-8 rounded-xl hover:bg-slate-800 transition-all">Upgrade to Pro</button>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex flex-wrap gap-3">
