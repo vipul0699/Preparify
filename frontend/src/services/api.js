@@ -89,3 +89,11 @@ export const examsApi = {
   submit: (attemptId, data) => request(`/exams/attempts/${attemptId}/submit/`, { method: 'POST', body: JSON.stringify(data) }),
   generateMock: (examType = 'CAT') => request('/exams/generate-mock/', { method: 'POST', body: JSON.stringify({ exam_type: examType }) }),
 };
+
+// Flashcards
+export const flashcardsApi = {
+  list: (dueOnly = false) => request(`/flashcards/?due=${dueOnly}`),
+  getStats: () => request('/flashcards/stats/'),
+  review: (cardId, quality) => request(`/flashcards/${cardId}/review/`, { method: 'POST', body: JSON.stringify({ quality }) }),
+  create: (data) => request('/flashcards/', { method: 'POST', body: JSON.stringify(data) }),
+};

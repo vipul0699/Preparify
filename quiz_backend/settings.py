@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'accounts',
     'quiz_generator',
     'exams',
+    'flashcards',
 ]
 
 SITE_ID = 1

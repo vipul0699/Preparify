@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/quiz/', include('quiz_generator.urls')),
     path('api/auth/', include('accounts.urls')),
     path('api/exams/', include('exams.urls')),
+    path('api/flashcards/', include('flashcards.urls')),
 ]

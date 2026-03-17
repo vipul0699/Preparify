@@ -8,6 +8,7 @@ from .serializers import (
 from .models import QuizSession, Question, UserResponse, TopicMaterial
 from .services.rag_service import rag_service
 from .services.llm_service import llm_service
+from flashcards.services import create_flashcard_from_question
 import uuid
 import json
 import io
@@ -160,6 +161,11 @@ class SubmitAnswerView(views.APIView):
                 feedback=evaluation.get('feedback', 'No feedback'),
                 is_correct=evaluation.get('is_correct', False)
             )
+            
+            # Smart Flashcards: Auto-create if incorrect and user is authenticated
+            flashcard_msg = None
+            if request.user.is_authenticated and not user_response.is_correct:
+                _, flashcard_msg = create_flashcard_from_question(request.user, question)
             
             # Auto-create ScoreRecord if user is authenticated and all questions answered
             if request.user.is_authenticated:

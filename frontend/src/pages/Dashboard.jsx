@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { quizApi, authApi } from '../services/api';
+import { quizApi, authApi, flashcardsApi } from '../services/api';
 
 export default function Dashboard() {
   const { user, setUser, logout } = useAuth();
@@ -14,11 +14,13 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [scores, setScores] = useState([]);
   const [activeNav, setActiveNav] = useState('dashboard');
+  const [flashcardStats, setFlashcardStats] = useState({ due_count: 0, total_count: 0 });
 
   useEffect(() => {
     authApi.getScores().then((data) => setScores(data.slice(0, 3))).catch(() => {});
     // Refresh profile to get latest streak/limit
     authApi.getProfile().then(setUser).catch(() => {});
+    flashcardsApi.getStats().then(setFlashcardStats).catch(() => {});
   }, []);
 
   const handleFileChange = (e) => {
@@ -74,6 +76,7 @@ export default function Dashboard() {
 
   const sidebarLinks = [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', to: '/dashboard' },
+    { id: 'flashcards', icon: 'style', label: 'Smart Flashcards', to: '/flashcards' },
     { id: 'scores', icon: 'trending_up', label: 'Score History', to: '/scores' },
   ];
 
@@ -290,6 +293,23 @@ export default function Dashboard() {
                 )}
                 <div className="absolute -bottom-8 -left-8 size-24 bg-orange-500/5 rounded-full blur-2xl" />
               </section>
+
+              {/* Smart Flashcards Reminder */}
+              {flashcardStats.due_count > 0 && (
+                <section className="bg-primary p-6 rounded-xl text-white shadow-lg shadow-primary/30 relative overflow-hidden group">
+                  <div className="relative z-10">
+                    <h3 className="font-bold text-lg leading-tight mb-1">Ready for a review?</h3>
+                    <p className="text-blue-100/80 text-sm mb-4">
+                      {flashcardStats.sample_topic ? `Hey, you struggled with '${flashcardStats.sample_topic}' recently. ` : ''}
+                      Ready for a 2-minute review?
+                    </p>
+                    <Link to="/flashcards" className="inline-block bg-white text-primary text-sm font-bold px-6 py-2.5 rounded-lg hover:bg-slate-50 transition-colors">
+                      Start {flashcardStats.due_count} Cards
+                    </Link>
+                  </div>
+                  <span className="material-symbols-outlined absolute -bottom-6 -right-6 text-9xl text-white/10 group-hover:scale-110 transition-transform">style</span>
+                </section>
+              )}
 
               <section className="bg-white/70 backdrop-blur-md p-6 rounded-xl border border-white/20 shadow-xl">
                 <div className="flex items-center justify-between mb-4">
