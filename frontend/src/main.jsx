@@ -8,6 +8,10 @@ import { AuthProvider } from './context/AuthContext.jsx'
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
+if (!clientId) {
+  console.warn("⚠️ VITE_GOOGLE_CLIENT_ID is not defined. Google Login will fail. Please set it in your environment variables.");
+}
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={clientId}>
